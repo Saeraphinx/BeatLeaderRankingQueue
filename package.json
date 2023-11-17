@@ -1,0 +1,30 @@
+{
+  "name": "blrankingqueue",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "rimraf ./build && tsc",
+    "start": "npm run build && node build/index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^18.15.3",
+    "@typescript-eslint/eslint-plugin": "^6.2.0",
+    "@typescript-eslint/parser": "^6.2.0",
+    "eslint": "^8.45.0",
+    "ts-node": "^10.9.1"
+  },
+  "dependencies": {
+    "@types/psl": "^1.1.0",
+    "discord.js": "^14.13.0",
+    "psl": "^1.9.0",
+    "sequelize": "^6.29.3",
+    "sqlite3": "^5.1.6",
+    "typescript": "^5.1.6",
+    "undici": "^5.21.0"
+  }
+}
