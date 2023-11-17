@@ -38,13 +38,15 @@ module.exports = {
                 let beatSaverId = message.content.match(/(?<=https:\/\/beatsaver\.com\/maps\/)([0-9]+)/g);
                 if (beatSaverId != null) {
                     beatSaverId.forEach(async (id: string) => {
-                        message.reply({ content: `ArcViewer Link: ${ARC_VIEWER_BSR + id}`, allowedMentions: { repliedUser: false } });
+                        luma.logger.log(`Found beatsaver link ${id} in ${message.url}`, `postPreviewLink`);
+                        //message.reply({ content: `ArcViewer Link: ${ARC_VIEWER_BSR + id}`, allowedMentions: { repliedUser: false } });
                         return;
                     });
                 } else if (message.attachments.size > 0) {
                     message.attachments.forEach(async (attachment: Attachment) => {
-                        if (attachment.name.endsWith(`.zip`)) {
-                            message.reply(`ArcViewer Link: ${ARC_VIEWER_ZIP + attachment.url}`);
+                        if (attachment.contentType == `application/zip`) {
+                            luma.logger.log(`Found zip file in ${message.url}`, `postPreviewLink`);
+                            //message.reply(`ArcViewer Link: ${ARC_VIEWER_ZIP + attachment.url}`);
                             return;
                         }
                     });
