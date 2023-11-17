@@ -1,0 +1,16 @@
+import { SlashCommandBuilder, EmbedBuilder, ChatInputCommandInteraction } from "discord.js";
+// @ts-ignore
+import { Command } from "../../classes/Command";
+// @ts-ignore
+import { Luma } from "../../classes/Luma";
+
+module.exports = {
+    command: new Command({
+        data: new SlashCommandBuilder()
+            .setName('status')
+            .setDescription("status"),
+        execute: async function exec(luma: Luma, interaction: ChatInputCommandInteraction) {
+            await interaction.reply({ content: "fuck" });
+        }
+    })
+}

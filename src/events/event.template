@@ -1,0 +1,15 @@
+import { BaseInteraction, Events, Interaction } from "discord.js";
+// @ts-ignore
+import { Event } from "../../classes/Event";
+// @ts-ignore
+import { Luma } from "../../classes/Luma";
+
+module.exports = {
+    event: new Event({
+        event: Events.InteractionCreate,
+        once: false,
+        execute: async function exec(luma: Luma, interaction:BaseInteraction) {
+            
+        }
+    })
+}
