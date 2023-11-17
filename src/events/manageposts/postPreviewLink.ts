@@ -35,7 +35,7 @@ module.exports = {
 
             //check if user posted a beatsaver link
             if (message.author.id == posterId) {
-                let beatSaverId = message.content.match(/(?<=https:\/\/beatsaver\.com\/maps\/)([0-9]+)/g);
+                let beatSaverId = message.content.match(/(?<=https:\/\/beatsaver\.com\/maps\/)([abcdef12134567890]+)/g);
                 if (beatSaverId != null) {
                     beatSaverId.forEach(async (id: string) => {
                         luma.logger.log(`Found beatsaver link ${id} in ${message.url}`, `postPreviewLink`);
