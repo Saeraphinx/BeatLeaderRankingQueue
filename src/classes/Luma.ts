@@ -1,5 +1,4 @@
 import * as Discord from "discord.js";
-import * as fs from "node:fs";
 import { REST } from '@discordjs/rest';
 import { Logger } from "./Logger";
 import { devId, devGuildId, token, clientId } from "../config.json";
@@ -16,10 +15,10 @@ export class Luma extends Discord.Client {
     public database: DatabaseManager;
     public statsTag: any;
     public logger: Logger;
-    public readonly devId: string = devId
+    public readonly devId: string = devId;
     public readonly devGuildId: string = devGuildId;
-    public proccessedEvents: Number;
-    public readonly storagePath: string = path.resolve("storage");
+    public proccessedEvents: number;
+    public readonly storagePath: string = path.resolve(`storage`);
 
     public offenseManager: OffenseManager;
     public apiManager: APIManager;
@@ -46,14 +45,14 @@ export class Luma extends Discord.Client {
     }
 
     public async pushCommands() {
-        let rest = new REST({ version: '10' }).setToken(token);
+        let rest = new REST({ version: `10` }).setToken(token);
         let guildIDs: string[] = this.guilds.cache.map(guild => guild.id);
         let serverCommands: Discord.Collection<string, Array<Discord.RESTPostAPIChatInputApplicationCommandsJSONBody | Discord.RESTPostAPIContextMenuApplicationCommandsJSONBody>> = new Discord.Collection<string, Array<Discord.RESTPostAPIChatInputApplicationCommandsJSONBody | Discord.RESTPostAPIContextMenuApplicationCommandsJSONBody>>();
         let globalCommands: Array<Discord.RESTPostAPIChatInputApplicationCommandsJSONBody | Discord.RESTPostAPIContextMenuApplicationCommandsJSONBody> = [];
 
         guildIDs.forEach(gid => {
             serverCommands.set(gid, []);
-        })
+        });
 
         this.commands.forEach(command => {
             if (command.guilds.length != 0) {
@@ -61,11 +60,11 @@ export class Luma extends Discord.Client {
                     try {
                         serverCommands.get(gid).push(command.data.toJSON());
                     } catch (error) {
-                        this.logger.error(error,"pushServerCommands")
+                        this.logger.error(error, `pushServerCommands`);
                     }
-                })
+                });
             } else {
-                globalCommands.push(command.data.toJSON())
+                globalCommands.push(command.data.toJSON());
             }
         });
 
@@ -93,18 +92,18 @@ export class Luma extends Discord.Client {
                         }
                     });
                 });
-                this.logger.log("Global commands pushed.", "Luma.pushCommands()")
+                this.logger.log(`Global commands pushed.`, `Luma.pushCommands()`);
             })
             .catch(error => {
-                this.logger.error(error, "Luma.pushCommands()")
+                this.logger.error(error, `Luma.pushCommands()`);
             }
             );
 
         serverCommands.forEach((value, key) => {
             rest.put(Discord.Routes.applicationGuildCommands(clientId, key), { body: value })
-                .then((response) => this.logger.log(`Pushed commands for ${key}`, "Luma.pushCommands()"))
+                .then((response) => this.logger.log(`Pushed commands for ${key}`, `Luma.pushCommands()`))
                 .catch(error => {
-                    this.logger.error(error, "Luma.pushCommands()")
+                    this.logger.error(error, `Luma.pushCommands()`);
                 }
                 );
         });
