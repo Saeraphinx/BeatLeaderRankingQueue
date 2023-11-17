@@ -1,12 +1,14 @@
 import { CommandInteraction, Guild, GuildMember, SlashCommandBuilder, Routes, REST, RESTGetAPIApplicationCommandResult } from "discord.js";
 import { ICommand } from "../interfaces/ICommand";
 import { Luma } from "./Luma";
-import { token, clientId } from "../config.json";
+import { token, clientId, devcreds, useDevCreds } from "../config.json";
 
 export class Command {
     public data: SlashCommandBuilder;
     public guilds: string[] = [];
+    // eslint-disable-next-line @typescript-eslint/ban-types
     public execute: Function;
+    // eslint-disable-next-line @typescript-eslint/ban-types
     public autocomplete?: Function;
     public id?: string;
 
@@ -42,22 +44,40 @@ export class Command {
     }
 
     public async updateCommand(luma: Luma) {
-        let rest = new REST({ version: '10' }).setToken(token);
+        let rest: REST;
+        if (useDevCreds) {
+            rest = new REST({ version: `10` }).setToken(devcreds.token);
+        } else {
+            rest = new REST({ version: `10` }).setToken(token);
+        }
 
-        rest.patch(Routes.applicationCommand(clientId, this.id), { body: this.data.toJSON() })
-            .then((response) => {
-                let response2: RESTGetAPIApplicationCommandResult = response as RESTGetAPIApplicationCommandResult;
-                this.id = response2.id;
-                luma.logger.log(`Patched command (${this.data.name})`, "Update Command")
-            })
-            .catch(error => {
-                luma.logger.error(error, "Update Command")
-            }
-            );
+        if (useDevCreds) {
+            rest.patch(Routes.applicationCommand(devcreds.clientId, this.id), { body: this.data.toJSON() })
+                .then((response) => {
+                    let response2: RESTGetAPIApplicationCommandResult = response as RESTGetAPIApplicationCommandResult;
+                    this.id = response2.id;
+                    luma.logger.log(`Patched command (${this.data.name})`, `Update Command`);
+                })
+                .catch(error => {
+                    luma.logger.error(error, `Update Command`);
+                }
+                );
+        } else {
+            rest.patch(Routes.applicationCommand(clientId, this.id), { body: this.data.toJSON() })
+                .then((response) => {
+                    let response2: RESTGetAPIApplicationCommandResult = response as RESTGetAPIApplicationCommandResult;
+                    this.id = response2.id;
+                    luma.logger.log(`Patched command (${this.data.name})`, `Update Command`);
+                })
+                .catch(error => {
+                    luma.logger.error(error, `Update Command`);
+                }
+                );
+        }
     }
 
     public async runCommand(luma: Luma, interaction: CommandInteraction) {
-        luma.logger.log(`<@!${interaction.user.id}> ran ${this.data.name}: ${interaction.commandName}`, "Interactions");
+        luma.logger.log(`<@!${interaction.user.id}> ran ${this.data.name}: ${interaction.commandName}`, `Interactions`);
 
         let errorString: string = `You are not allowed to run this command at the moment. Please contact <@!${luma.devId}> if you think you should be able to.`;
 
@@ -94,7 +114,7 @@ export class Command {
             } else {
                 flag = false;
                 let server: Guild = luma.guilds.cache.get(luma.devGuildId);
-                let member: GuildMember = server.members.cache.find(member => member.id === interaction.user.id)
+                let member: GuildMember = server.members.cache.find(member => member.id === interaction.user.id);
                 if (member) {
                     member.roles.cache.forEach(role => {
                         if (role.id == this.devRolewl[0]) {
@@ -110,19 +130,20 @@ export class Command {
                 if (flag) {
                     await this.execute(luma, interaction);
                 } else {
-                    await interaction.reply({ content: errorString })
+                    await interaction.reply({ content: errorString });
                 }
             } catch (error: any) {
+                // eslint-disable-next-line no-console
                 console.error(error);
-                luma.logger.warn(`Interaction (${interaction.commandName}) did not reply.`, "Interactions")
+                luma.logger.warn(`Interaction (${interaction.commandName}) did not reply.`, `Interactions`);
                 await interaction.reply({ content: `damn it broke. msg <@!213074932458979330>\nError: \`${error.name}: ${error.message}\`` }).catch(error => {
-                    interaction.editReply(`damn it broke. msg <@!213074932458979330>\nError: \`${error.name}: ${error.message}\``).catch(error => {
-                        luma.logger.warn(`Interaction (${interaction.commandName}) did not reply in time.`, "Interactions")
+                    interaction.editReply(`damn it broke. msg <@!213074932458979330>\nError: \`${error.name}: ${error.message}\``).catch(() => {
+                        luma.logger.warn(`Interaction (${interaction.commandName}) did not reply in time.`, `Interactions`);
                     });
                 });
             }
         } catch (error) {
-            luma.logger.error(error, "interactions")
+            luma.logger.error(error, `interactions`);
         }
     }
 }

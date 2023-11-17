@@ -1,5 +1,5 @@
-import { GatewayIntentBits, Partials, Events, Collection, Client } from "discord.js";
-import { token } from "./config.json";
+import { GatewayIntentBits, Partials, Events } from "discord.js";
+import { token, useDevCreds, devcreds } from "./config.json";
 import { Luma } from "./classes/Luma";
 
 const LUMA: Luma = new Luma({
@@ -19,25 +19,28 @@ LUMA.on(Events.ClientReady, async c => {
                 processed_messages: 0,
                 times_started: 0,
             });
-        }
-        catch (error) {
-
+        } catch {
+            //does nothing
         }
     }
-    LUMA.logger.log(`${c.user.username} Logged In.`, "index");
-    LUMA.statsTag.increment('times_started');
-})
+    LUMA.logger.log(`${c.user.username} Logged In.`, `index`);
+    LUMA.statsTag.increment(`times_started`);
+});
 
 LUMA.loadCommands();
 LUMA.pushCommands();
 LUMA.loadEvents();
 
-LUMA.login(token);
+if (useDevCreds) {
+    LUMA.login(devcreds.token);
+} else {
+    LUMA.login(token);
+}
 
-process.on('unhandledRejection', (reason: Error | any, promise: Promise<any>) => {
+process.on(`unhandledRejection`, (reason: Error | any, promise: Promise<any>) => {
     if (reason instanceof Error) {
-        return LUMA.logger.error(`Unhandled promise rejection:${reason.name}\n${reason.message}\n${reason.stack}`, "node.js");
+        return LUMA.logger.error(`Unhandled promise rejection:${reason.name}\n${reason.message}\n${reason.stack}`, `node.js`);
     } else {
-        return LUMA.logger.error(`Unhandled promise rejection:${reason}\n`, "node.js");
+        return LUMA.logger.error(`Unhandled promise rejection:${reason}\n`, `node.js`);
     }
 });

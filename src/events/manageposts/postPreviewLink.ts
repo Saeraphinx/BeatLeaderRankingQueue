@@ -25,12 +25,6 @@ module.exports = {
                 return;
             }
 
-            let threadParentChannel = thread.parent;
-
-            if (threadParentChannel == null || !(threadParentChannel instanceof ForumChannel)) {
-                return;
-            }
-
             let posterId = thread.ownerId;
 
             //check if user posted a beatsaver link
