@@ -44,7 +44,7 @@ module.exports = {
                         thread.send({ content: `2 Week Inactivity Bump`, allowedMentions: { parse: [] } });
                     }
                 });
-            }, 1000 * 60);
+            }, 1000 * 60 * 60 * 24);
         }
     })
 };
