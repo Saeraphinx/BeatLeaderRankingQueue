@@ -1,19 +1,33 @@
 import { Channel, EmbedBuilder } from "discord.js";
 import { IUserHistory } from "../interfaces/IUser";
 import { Luma } from "./Luma";
+import { useDevCreds } from "../config.json";
 
 //import * as Discord from "discord.js";
 
 
 export class OffenseManager {
     public luma: Luma;
-    public readonly unbannedRoleId = `1128065797126881280`; //test role 1130664286457434165
-    public readonly guildId = `921820046345523311`; //test guild 348498115621552129
-    public readonly loggingChannel = `1137885973921935372`; // test channel 1130647791207718973
-    public readonly FOURM_CHANNEL_ID = `1034817071894237194`;
+
+    public readonly unbannedRoleId;
+    public readonly guildId;
+    public readonly loggingChannel;
+    public readonly FOURM_CHANNEL_ID;
 
     constructor(luma: Luma) {
         this.luma = luma;
+
+        if (useDevCreds) {
+            this.unbannedRoleId = `1130664286457434165`; //test role 1130664286457434165
+            this.guildId = `348498115621552129`; //test guild 348498115621552129
+            this.loggingChannel = `1130647791207718973`; // test channel 1130647791207718973
+            this.FOURM_CHANNEL_ID = `1130648641233760276`;
+        } else {
+            this.unbannedRoleId = `1128065797126881280`; //test role 1130664286457434165
+            this.guildId = `921820046345523311`; //test guild 348498115621552129
+            this.loggingChannel = `1137885973921935372`; // test channel 1130647791207718973
+            this.FOURM_CHANNEL_ID = `1034817071894237194`;
+        }
     }
 
     public async addRejectedMap(mapperId: string, rtMemberId: string, reason: string) {

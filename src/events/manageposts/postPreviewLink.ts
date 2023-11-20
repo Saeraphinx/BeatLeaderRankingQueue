@@ -1,4 +1,4 @@
-import { Attachment, Events, ForumChannel, Message } from "discord.js";
+import { Attachment, Events, ForumChannel, Message, ThreadChannel } from "discord.js";
 import { Event } from "../../classes/Event";
 import { Luma } from "../../classes/Luma";
 
@@ -16,8 +16,8 @@ module.exports = {
             const ARC_VIEWER_BSR = `https://allpoland.github.io/ArcViewer/?id=`;
             const ARC_VIEWER_ZIP = `https://allpoland.github.io/ArcViewer/?url=`;
             const FOURM_CHANNEL_ID = luma.offenseManager.FOURM_CHANNEL_ID;
-            let thread = message.thread;
-            if (thread == null) {
+            let thread = message.channel;
+            if (thread == null || !(thread instanceof ThreadChannel)) {
                 return;
             }
 
@@ -33,14 +33,14 @@ module.exports = {
                 if (beatSaverId != null) {
                     beatSaverId.forEach(async (id: string) => {
                         luma.logger.log(`Found beatsaver link ${id} in ${message.url}`, `postPreviewLink`);
-                        //message.reply({ content: `ArcViewer Link: ${ARC_VIEWER_BSR + id}`, allowedMentions: { repliedUser: false } });
+                        message.reply({ content: `ArcViewer Link: [Link](<${ARC_VIEWER_BSR + id}>)`, allowedMentions: { repliedUser: false } });
                         return;
                     });
                 } else if (message.attachments.size > 0) {
                     message.attachments.forEach(async (attachment: Attachment) => {
                         if (attachment.contentType == `application/zip`) {
                             luma.logger.log(`Found zip file in ${message.url}`, `postPreviewLink`);
-                            //message.reply(`ArcViewer Link: ${ARC_VIEWER_ZIP + attachment.url}`);
+                            message.reply({ content: `ArcViewer Link: [Link](<${ARC_VIEWER_ZIP + attachment.url}>)`, allowedMentions: { repliedUser: false } });
                             return;
                         }
                     });

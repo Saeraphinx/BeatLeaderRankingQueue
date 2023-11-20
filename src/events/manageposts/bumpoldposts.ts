@@ -1,4 +1,4 @@
-import { Events, ForumChannel } from "discord.js";
+import { Events, ForumChannel, Message } from "discord.js";
 import { Event } from "../../classes/Event";
 import { Luma } from "../../classes/Luma";
 
@@ -29,7 +29,7 @@ module.exports = {
                     if (thread.locked) {
                         return;
                     }
-                    if (thread.sendable) {
+                    if (!thread.sendable) {
                         luma.logger.warn(`Unable to send messages in thread ${thread.url}`, `bumpoldposts`);
                         return;
                     }
@@ -38,12 +38,13 @@ module.exports = {
                         return;
                     }
                     let now = new Date(Date.now());
-                    if (now.getTime() - thread.createdTimestamp > 1000 * 60 * 60 * 24 * 14) {
+                    let message = await thread.messages.fetch(thread.lastMessageId);
+                    if (now.getTime() - message.createdTimestamp > 1000 * 60 * 60 * 24 * 14) {
                         luma.logger.log(`Bumping thread ${thread.url}`, `bumpoldposts`);
-                        //thread.send({ content: `2 Week Inactivity Bump`, allowedMentions: { parse: [] } });
+                        thread.send({ content: `2 Week Inactivity Bump`, allowedMentions: { parse: [] } });
                     }
                 });
-            }, 1000 * 60 * 60 * 24);
+            }, 1000 * 60);
         }
     })
 };
