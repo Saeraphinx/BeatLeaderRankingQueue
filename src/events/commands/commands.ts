@@ -20,11 +20,11 @@ module.exports = {
                 } catch (error) {
                     
                 }
-            /*} else if (interaction.isContextMenuCommand()) {
+            } else if (interaction.isContextMenuCommand()) {
                 const command = luma.contextMenus.get(interaction.commandName);
                 if (!command) return;
                 await command.runCommand(luma, interaction);
-            */}
+            }
         }
     })
 }

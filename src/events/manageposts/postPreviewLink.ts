@@ -39,7 +39,8 @@ module.exports = {
                 } else if (message.attachments.size > 0) {
                     message.attachments.forEach(async (attachment: Attachment) => {
                         if (attachment.contentType == `application/zip`) {
-                            luma.logger.log(`Found zip file in ${message.url}`, `postPreviewLink`);
+                            luma.logger.log(`Found zip file in ${message.url}. Posted by ${message.author.id} (<@${message.author.id}>)`, `postPreviewLink`);
+                            luma.logger.log(`Loading zip...`, `postPreviewLink`);
                             message.reply({ content: `ArcViewer Link: [Link](<${ARC_VIEWER_ZIP + attachment.url}>)`, allowedMentions: { repliedUser: false } });
                             return;
                         }

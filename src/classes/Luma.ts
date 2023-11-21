@@ -1,3 +1,4 @@
+/* eslint-disable quotes */
 import * as Discord from "discord.js";
 import { REST } from '@discordjs/rest';
 import { Logger } from "./Logger";
@@ -9,9 +10,12 @@ import { DatabaseManager } from "./DatabaseManager";
 import path from "node:path";
 import { OffenseManager } from "./OffenseManager";
 import { APIManager } from "./APIManager";
+import { ComparisonManager } from "./ComparisonManager";
+import { ContextMenu } from "./ContextMenu";
 
 export class Luma extends Discord.Client {
     public commands = new Discord.Collection<string, Command>();
+    public contextMenus = new Discord.Collection<string, ContextMenu>();
     public database: DatabaseManager;
     public statsTag: any;
     public logger: Logger;
@@ -22,6 +26,7 @@ export class Luma extends Discord.Client {
 
     public offenseManager: OffenseManager;
     public apiManager: APIManager;
+    public comparisonManager: ComparisonManager;
 
     constructor(options: Discord.ClientOptions) {
         super(options);
@@ -42,6 +47,7 @@ export class Luma extends Discord.Client {
 
         this.offenseManager = new OffenseManager(this);
         this.apiManager = new APIManager(this);
+        this.comparisonManager = new ComparisonManager(this);
     }
 
     public async pushCommands() {
@@ -73,19 +79,19 @@ export class Luma extends Discord.Client {
             }
         });
 
-        /*this.contextMenus.forEach(contextmenu => {
+        this.contextMenus.forEach(contextmenu => {
             if (contextmenu.guilds.length != 0) {
                 contextmenu.guilds.forEach(gid => {
                     try {
                         serverCommands.get(gid).push(contextmenu.data.toJSON());
                     } catch (error) {
-                        this.logger.error(error,"pushServerCommands")
+                        this.logger.error(error, "pushServerCommands");
                     }
                 })
             } else {
-                globalCommands.push(contextmenu.data.toJSON())
+                globalCommands.push(contextmenu.data.toJSON());
             }
-        });*/
+        });
         if (useDevCreds) {
             rest.put(Discord.Routes.applicationCommands(devcreds.clientId), { body: globalCommands })
                 .then((response) => {
@@ -139,7 +145,6 @@ export class Luma extends Discord.Client {
                     );
             });
         }
-
     }
     public loadCommands() {
         loadCommands(this);

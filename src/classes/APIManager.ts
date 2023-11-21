@@ -25,7 +25,7 @@ export class APIManager {
 
 }
 
-class API {
+export class API {
     public luma:Luma;
 
     constructor(luma:Luma) {
@@ -63,6 +63,10 @@ class BeatLeaderAPI extends API {
     public async getMapLeaderboard(id:string) {
         return await this.sendRequest(APIType.BeatLeader, `leaderboard/${id}`);
     }
+
+    public async compareMaps(newMapLink:string, oldMapLink:string, charicteristc:string = `Standard`, difficulty:string = `ExpertPlus`) {
+        return await this.sendRequest(APIType.BeatLeader_Staging, `mapscompare/text?oldMapLink=${oldMapLink}&newMapLink=${newMapLink}&charToCompare=${charicteristc}&diffToCompare=${difficulty}`);
+    }
 }
 
 class DiscordAPI extends API {
@@ -93,7 +97,8 @@ class BeatSaverAPI extends API {
 
 export enum APIType {
     BeatLeader = `https://api.beatleader.xyz/`,
-    BeatSaver = `https://api.beatsaver.com/`
+    BeatSaver = `https://api.beatsaver.com/`,
+    BeatLeader_Staging = `https://stage.api.beatleader.net/`
 }
 
 export interface IAPIResponse {
