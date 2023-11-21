@@ -38,9 +38,8 @@ module.exports = {
                 await interaction.editReply({ content: `\`\`\`diff\n${response}\`\`\`` });
             } else {
                 await interaction.editReply({ content: `Message contents is too long. Sending in multiple messages...` });
-                for (; response.length > 1980;) {
-                    response = response.substring(0, 1980);
-                    await interaction.channel.send({ content: `\`\`\`diff\n${response}...\`\`\`` });
+                for (let i = 0; response.length > 1980 * (i + 1); i++) {
+                    await interaction.channel.send({ content: `\`\`\`diff\n${response.substring(1980 * i, 1980 * (i + 1))}...\`\`\`` });
                 }
             }
             setTimeout(() => {
