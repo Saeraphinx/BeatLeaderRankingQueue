@@ -64,7 +64,7 @@ class BeatLeaderAPI extends API {
         return await this.sendRequest(APIType.BeatLeader, `leaderboard/${id}`);
     }
 
-    public async compareMaps(newMapLink:string, oldMapLink:string, charicteristc:string = `Standard`, difficulty:string = `ExpertPlus`) {
+    public async compareMaps(oldMapLink:string, newMapLink:string, charicteristc:string = `Standard`, difficulty:string = `ExpertPlus`) {
         return await this.sendRequest(APIType.BeatLeader_Staging, `mapscompare/text?oldMapLink=${oldMapLink}&newMapLink=${newMapLink}&charToCompare=${charicteristc}&diffToCompare=${difficulty}`);
     }
 }

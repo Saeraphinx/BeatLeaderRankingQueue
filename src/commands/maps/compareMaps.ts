@@ -26,10 +26,9 @@ module.exports = {
                 { name: `Expert`, value: `Expert` },
                 { name: `Expert+`, value: `ExpertPlus` }
             ))
-            .addBooleanOption(option => option.setName(`public`).setDescription(`Should the repsonse be public?`).setRequired(false))
             .setDMPermission(false),
         execute: async function exec(luma: Luma, interaction: ChatInputCommandInteraction) {
-            await interaction.deferReply({ ephemeral: interaction.options.getBoolean(`public`, false) ? true : false });
+            await interaction.deferReply({ ephemeral: false });
             let response = await luma.comparisonManager.getMapComparison(interaction.options.getString(`charicteristic`, true), interaction.options.getString(`difficulty`, true));
             if (response == null) {
                 return interaction.editReply({ content: `Failed to compare maps.` });
@@ -38,7 +37,11 @@ module.exports = {
             if (response.length < 1980) {
                 await interaction.editReply({ content: `\`\`\`diff\n${response}\`\`\`` });
             } else {
-                await interaction.editReply({ content: `\`\`\`diff\n${response.substring(0, 1980)}...\`\`\`` });
+                await interaction.editReply({ content: `Message contents is too long. Sending in multiple messages...` });
+                for (; response.length > 1980;) {
+                    response = response.substring(0, 1980);
+                    await interaction.channel.send({ content: `\`\`\`diff\n${response}...\`\`\`` });
+                }
             }
             setTimeout(() => {
                 luma.comparisonManager.clearSavedMaps();
