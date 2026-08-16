@@ -13,8 +13,7 @@ module.exports = {
                 });
             }
 
-            const ARC_VIEWER_BSR = `https://allpoland.github.io/ArcViewer/?id=`;
-            const ARC_VIEWER_ZIP = `https://allpoland.github.io/ArcViewer/?url=`;
+            const CHROVIEWER = `https://chroviewer.com//?map=`;
             const FOURM_CHANNEL_ID = luma.offenseManager.FOURM_CHANNEL_ID;
             let thread = message.channel;
             if (thread == null || !(thread instanceof ThreadChannel)) {
@@ -33,7 +32,7 @@ module.exports = {
                 if (beatSaverId != null) {
                     beatSaverId.forEach(async (id: string) => {
                         luma.logger.log(`Found beatsaver link ${id} in ${message.url}`, `postPreviewLink`);
-                        message.reply({ content: `ArcViewer Link: [Link](<${ARC_VIEWER_BSR + id}>)`, allowedMentions: { repliedUser: false } });
+                        message.reply({ content: `Chroviewer Link: [Link](<${CHROVIEWER + id}>)`, allowedMentions: { repliedUser: false } });
                         return;
                     });
                 } else if (message.attachments.size > 0) {
@@ -41,7 +40,7 @@ module.exports = {
                         if (attachment.contentType == `application/zip`) {
                             luma.logger.log(`Found zip file in ${message.url}. Posted by ${message.author.id} (<@${message.author.id}>)`, `postPreviewLink`);
                             luma.logger.log(`Loading zip...`, `postPreviewLink`);
-                            message.reply({ content: `ArcViewer Link: [Link](<${ARC_VIEWER_ZIP + attachment.url}>)`, allowedMentions: { repliedUser: false } });
+                            message.reply({ content: `ChroViewer Link: [Link](<${CHROVIEWER + attachment.url}>)`, allowedMentions: { repliedUser: false } });
                             return;
                         }
                     });
